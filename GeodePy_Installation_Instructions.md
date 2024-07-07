@@ -68,14 +68,15 @@
      import pandas as pd
      from geodepy.height import GPS_to_AVWS, GPS_to_AHD, GPS_to_AUSGeoid09, GPS_to_AUSGeoid98
 
-     # Load the LAS file
-     las_file_path = 'SW_214000_7409000_1k_class_AHD.las'
-     las_data = pd.read_csv(las_file_path)
+     # Load the file
+     file_path = "TEST Lat Long Ellipsoidal.csv"
+     data = pd.read_csv(las_file_path, header=None)
+     data.columns = ["latitude", "longitude", "height"]
 
      # Extract GPS coordinates and heights
-     latitudes = las_data.x
-     longitudes = las_data.y
-     gps_heights = las_data.z
+     latitudes = data.latitude
+     longitudes = data.longitude
+     gps_heights = data.height
 
      # Convert GPS heights using GeodePy functions
      avws_heights = [GPS_to_AVWS(lat, lon, h) for lat, lon, h in zip(latitudes, longitudes, gps_heights)]
