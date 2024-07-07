@@ -30,7 +30,7 @@
 4. **Install GeodePy and Dependencies**:
    - Clone the GeodePy repository from GitHub:
      ```sh
-     git clone https://github.com/GeoscienceAustralia/GeodePy.git
+     git clone https://github.com/rbeucher/GeodePy.git
      ```
    - Navigate to the GeodePy directory:
      ```sh
