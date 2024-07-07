@@ -67,11 +67,10 @@
      ```python
      import pandas as pd
      from geodepy.height import GPS_to_AVWS, GPS_to_AHD, GPS_to_AUSGeoid09, GPS_to_AUSGeoid98
-     import laspy
 
      # Load the LAS file
      las_file_path = 'SW_214000_7409000_1k_class_AHD.las'
-     las_data = laspy.read(las_file_path)
+     las_data = pd.read_csv(las_file_path)
 
      # Extract GPS coordinates and heights
      latitudes = las_data.x
