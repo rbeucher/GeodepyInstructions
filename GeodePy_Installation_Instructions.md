@@ -80,12 +80,10 @@
 
      data.head()
 
-     data.to_csv("my_new_file.csv")
-
      ```
 
 4. **Save and Export Results**:
    - To save the DataFrame to a CSV file, you can use:
      ```python
-     df.to_csv('converted_heights.csv', index=False)
+     data.to_csv('converted_heights.csv', index=False)
      ```
