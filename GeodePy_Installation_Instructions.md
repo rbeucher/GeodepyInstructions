@@ -48,6 +48,10 @@
      ```sh
      pip install .
      ```
+   - Let's add pandas to the environment. It is useful to have.
+     ```sh
+     conda install pandas
+     ```
 
 ### Running Jupyter Notebook and Applying GeodePy Functions
 
