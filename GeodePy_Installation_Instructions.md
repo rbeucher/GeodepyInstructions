@@ -28,6 +28,10 @@
      ```
 
 4. **Install GeodePy and Dependencies**:
+   - Install git so we can retrieve the GeodePy code from GitHub
+     ```sh
+     conda install git
+     ```
    - Clone the GeodePy repository from GitHub:
      ```sh
      git clone https://github.com/rbeucher/GeodePy.git
