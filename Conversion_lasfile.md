@@ -62,3 +62,55 @@ with laspy.file.File("test.las", mode="r") as las_file:
 
 ```
 
+
+Export to lasfile:
+
+```python
+import laspy
+from osgeo import ogr, osr
+
+def convert_coordinates(x, y, input_epsg=7856, output_epsg=4326):
+    # Create coordinate transformation
+    input_spatial_ref = osr.SpatialReference()
+    input_spatial_ref.ImportFromEPSG(input_epsg)
+
+    output_spatial_ref = osr.SpatialReference()
+    output_spatial_ref.ImportFromEPSG(output_epsg)
+
+    coord_transform = osr.CoordinateTransformation(input_spatial_ref, output_spatial_ref)
+    
+    # Transform point
+    lon, lat, _ = coord_transform.TransformPoint(x, y)
+    return lat, lon
+
+# Read the input LAS file
+input_file = "test.las"
+output_file = "transformed_output.las"
+
+with laspy.file.File(input_file, mode="r") as las_file:
+    # Extract x, y, z data
+    x_coords = las_file.x
+    y_coords = las_file.y
+    z_coords = las_file.z
+    
+    # Convert coordinates
+    latitudes = []
+    longitudes = []
+    for x, y in zip(x_coords, y_coords):
+        lat, lon = convert_coordinates(x, y)
+        latitudes.append(lat)
+        longitudes.append(lon)
+        
+    # Prepare the header for the output LAS file
+    header = las_file.header.copy()
+    
+    # Create a new LAS file with transformed coordinates
+    with laspy.file.File(output_file, mode="w", header=header) as out_las_file:
+        out_las_file.X = las_file.X  # Copy original x coordinates (can be left unchanged or modified as needed)
+        out_las_file.Y = las_file.Y  # Copy original y coordinates (can be left unchanged or modified as needed)
+        out_las_file.Z = las_file.Z  # Copy original z coordinates
+        out_las_file.Lat = latitudes  # Add transformed latitudes
+        out_las_file.Lon = longitudes  # Add transformed longitudes
+
+```
+
