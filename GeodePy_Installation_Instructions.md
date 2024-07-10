@@ -28,9 +28,13 @@
      ```
 
 4. **Install GeodePy and Dependencies**:
+   - Install git so we can retrieve the GeodePy code from GitHub
+     ```sh
+     conda install git
+     ```
    - Clone the GeodePy repository from GitHub:
      ```sh
-     git clone https://github.com/GeoscienceAustralia/GeodePy.git
+     git clone https://github.com/rbeucher/GeodePy.git
      ```
    - Navigate to the GeodePy directory:
      ```sh
@@ -43,6 +47,10 @@
    - Install GeodePy:
      ```sh
      pip install .
+     ```
+   - Let's add pandas to the environment. It is useful to have.
+     ```sh
+     conda install pandas
      ```
 
 ### Running Jupyter Notebook and Applying GeodePy Functions
@@ -65,41 +73,25 @@
    - In your Jupyter Notebook, start by importing the necessary modules and loading your dataset. Here's a sample code snippet:
 
      ```python
+
      import pandas as pd
      from geodepy.height import GPS_to_AVWS, GPS_to_AHD, GPS_to_AUSGeoid09, GPS_to_AUSGeoid98
-     import laspy
 
-     # Load the LAS file
-     las_file_path = 'SW_214000_7409000_1k_class_AHD.las'
-     las_data = laspy.read(las_file_path)
+     file_path = "TEST Lat Long Ellipsoidal.csv"
+     data = pd.read_csv(file_path, header=None)
+     data.columns = ["Latitude", "Longitude", "GPS_Height"]
 
-     # Extract GPS coordinates and heights
-     latitudes = las_data.x
-     longitudes = las_data.y
-     gps_heights = las_data.z
+     data = data.head()
 
-     # Convert GPS heights using GeodePy functions
-     avws_heights = [GPS_to_AVWS(lat, lon, h) for lat, lon, h in zip(latitudes, longitudes, gps_heights)]
-     ahd_heights = [GPS_to_AHD(lat, lon, h) for lat, lon, h in zip(latitudes, longitudes, gps_heights)]
-     ausgeoid09_heights = [GPS_to_AUSGeoid09(lat, lon, h) for lat, lon, h in zip(latitudes, longitudes, gps_heights)]
-     ausgeoid98_heights = [GPS_to_AUSGeoid98(lat, lon, h) for lat, lon, h in zip(latitudes, longitudes, gps_heights)]
+     results = data.apply(lambda row: GPS_to_AVWS(row["Latitude"], row["Longitude"], row["GPS_Height"]), axis=1)
+     data[['AVWS_Height', 'AVWS_Height_stderr']] = pd.DataFrame(results.to_list(), index = data.index).applymap(lambda x: x[0])
 
-     # Create a DataFrame to display results
-     df = pd.DataFrame({
-         'Latitude': latitudes,
-         'Longitude': longitudes,
-         'GPS_Height': gps_heights,
-         'AVWS_Height': avws_heights,
-         'AHD_Height': ahd_heights,
-         'AUSGeoid09_Height': ausgeoid09_heights,
-         'AUSGeoid98_Height': ausgeoid98_heights
-     })
+     data.head()
 
-     df.head()
      ```
 
 4. **Save and Export Results**:
    - To save the DataFrame to a CSV file, you can use:
      ```python
-     df.to_csv('converted_heights.csv', index=False)
+     data.to_csv('converted_heights.csv', index=False)
      ```
